@@ -1,0 +1,364 @@
+\documentclass[a4paper]{article}
+
+\usepackage{hyperlatex}
+\setcounter{htmldepth}{1}
+
+\begin{document}
+\title{StatDataML: An XML Format for Statistical Data}
+\author{Torsten Hothorn, Friedrich Leisch and David Meyer}
+\maketitle
+
+\section{Introduction}
+
+The exchange of data between different tools for data analysis and
+data manipulation is a common problem. Different applications use different
+and often proprietary and undocumented formats for data storage. This
+causes serious problems when one would like to transport data from 
+one application to another. 
+
+The standard way to circumvent such
+difficulties is the use of export or import filters or the use of
+simplistic formats like comma-separated values.
+Filters are sometimes not available or hard to write because
+of the proprietary nature of some formats.  The use of comma separated
+values results in a loss of generality.
+
+The aim of this paper is to introduce an XML-based markup language
+for statistical data, called \emph{StatDataML}. The design borrows
+heavily from S, such that data objects are basically organized as
+recursive structures (lists) and non-recursive structures (arrays),
+respectively.  Additionally, each object can have an attached list of
+properties (corresponding to S attributes).
+
+Throughout our work we compare the XML definitions with the
+corresponding ones from 2 families of mathematical programming
+languages: S/R and Matlab/Octave, and we consider the syntax general
+enough to cover many others.
+
+\section{What is XML?}
+
+For "statistical data" one would usually think of such things as
+dataframes, time series objects, responses and regressors or
+contingency tables.  Programs that produce such data store it on disk,
+for which they can use either a binary format or a text format.  XML
+is a set of rules, guidelines, conventions etc. for designing text
+formats for data in general, in a way that files are easy to
+generate and read (by a computer), that they are unambiguous, and that
+they avoid common pitfalls, such as lack of extensibility, lack of support
+for internationalization/localization, and platform-dependency. XML,
+as a W3C technology, is open standard.
+
+\section{StatDataML}
+
+\texttt{StatDataML}-files, as they are XML-files, are ordinary text files named
+\texttt{*.sdml}, containing several XML-elements (so called
+\emph{tags}), which can be formally described with a special data
+definition language. In the following, we will go through the rules in the
+\texttt{StatDataML.dtd}-file:
+
+\begin{verbatim}
+<!ELEMENT StatDataML (description?, dataset?)>
+\end{verbatim}
+
+A \texttt{StatDataML}-element (the top level element in every
+StatDataML file) contains one \texttt{description} element and one
+\texttt{dataset} element, each may be missing:
+
+\subsection{The \texttt{description} element}
+
+\begin{verbatim}
+<!ELEMENT description (title?, source?, date?, version?, comment?,
+                       creator?, class?, properties?)>
+
+<!ELEMENT title (#PCDATA) >
+<!ELEMENT source (#PCDATA) >
+<!ELEMENT date (#PCDATA) >
+<!ELEMENT version (#PCDATA) >
+<!ELEMENT comment (#PCDATA) >
+<!ELEMENT creator (#PCDATA) >
+<!ELEMENT class (#PCDATA) >
+<!ELEMENT properties (list)>
+
+\end{verbatim}
+
+The \texttt{description} element is used to provide meta-information
+about a dataset that is typically not needed for computations on the
+data itself. It consists of eight elements:
+\texttt{title, source, date, comment, version, creator} and
+\texttt{class} are simple 
+strings (\texttt{PCDATA}), whereas \texttt{properties} is a \texttt{list} 
+element (see next section). The \texttt{creator} element should
+contain knowledge about the creating application and the \texttt{StatDataML}
+implementation, \texttt{properties} offers a well-defined structure to save 
+application based meta-information, and, finally, the \texttt{class}
+element will contain the class name, if any
+(needed for user-defined extensions, which is still an open problem).  
+
+There are some discussions about metadata in statistics (e.g. 
+ \xlink{JRSS Metadata Metting 2000}{http://www.gla.ac.uk/External/RSS/RSScomp/metamtg.html}).
+One could think of extending the \texttt{description} element in such a way
+that information like \texttt{R}-dataset help-files can be stored.  
+
+\subsection{The \texttt{dataset} element}
+
+\begin{verbatim}
+<!ELEMENT dataset (list | array)>
+\end{verbatim}
+
+We define a \texttt{dataset} element either as an array or as a list.
+We use arrays and lists as basic "data types" in StatDataML
+because---in our opinion---every data object
+in statistics can be decomposed into a set of arrays and lists (as
+in R/S, or like the corresponding arrays and cell-arrays in MATLAB).  The
+basic property of a list is its recursive structure, in contrast to
+arrays which are always non-recursive. If one thinks about data as a
+tree, lists would be the branches and arrays the leaves.
+
+\subsubsection{Arrays}
+
+\begin{verbatim}
+<!ELEMENT array (dimension, properties?, (data | textdata))>
+\end{verbatim}
+
+Arrays are blocks of data objects of the same elementary type
+with dimension information used for memory allocation and data access
+(indexing).  
+
+\begin{verbatim}
+<!ELEMENT dimension (dim*)>
+<!ELEMENT dim (e*)>
+<!ATTLIST dim size CDATA #REQUIRED>
+\end{verbatim}
+
+The \texttt{dimension} element contains one or more
+\texttt{dim}-tags, depending on the number of dimensions. Each of
+them has \texttt{size} as a required attribute, and may optionally
+contain up to \texttt{size} names, specified with \texttt{<e>\ldots</e>}-tags.
+
+Note that arrays, like the whole dataset, can also have additional
+\texttt{properties} attached, corresponding, e.g., to attributes in
+S. In fact, the name "properties" was chosen
+because the name "attribute" is already used in XML itself. 
+
+The main subelement is either a \texttt{data} or
+\texttt{textdata} element which contains the data itself:
+
+\begin{verbatim}
+<!ELEMENT data (e|na)* >
+<!ATTLIST data true CDATA "1"
+               false CDATA "0"
+               mode (logical|nominal|ordinal|integer|real
+               |complex|character) "character" >
+
+<!ELEMENT e (#PCDATA) >
+<!ELEMENT na EMPTY>
+\end{verbatim}
+
+If \texttt{data} is used (especially recommended for character data),
+then each element of the array representing an existing value is
+encapsulated in \texttt{<e>\ldots</e>}.  For missing vales,
+\texttt{<na/>} has to be used.  Empty values are just repesented by
+\texttt{<e></e>}. The \texttt{mode}-attribute specifies the
+statistical datatype, as logical, nominal, ordinal, integer, real,
+complex and character. The implementation is responsible for the
+correct casts (\emph{in R only partially implemented}).  The
+\texttt{true}- and \texttt{false}-attributes can be used to change the
+default representation of logical values (\texttt{1} and \texttt{0}).
+Quoting is needed for the special characters shown in
+Table~\ref{quote}.
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{|l|l|} \hline
+  character & quote \\ \hline \hline
+  \& & \&amp; \\
+  $<$ & \&lt; \\
+  $>$ & \&gt; \\ \hline
+\end{tabular}
+\caption{\label{quote} Quoting characters in StatDataML}
+\end{center}
+\end{table}  
+
+
+For (memory/storage space) efficiency we also define \texttt{texdata},
+a second way of writing data blocks using arbitrary characters
+(typically whitespace) for
+separating elements instead of \texttt{<e>\ldots</e>}:
+
+\begin{verbatim}
+<!ELEMENT textdata (#PCDATA) >
+<!ATTLIST textdata sep CDATA " \n" 
+                   na.string CDATA "NA" 
+                   null.string CDATA "NULL" 
+                   true CDATA "1"
+                   false CDATA "0"
+                   mode (logical|nominal|ordinal|integer|real
+                   |complex|character) "character">
+\end{verbatim}
+
+In this case the complete data block is included in a single XML tag;
+if a single character is used as separator, one needs 6 bytes less per
+element.  The set of separator characters is defined by the optional
+attribute \texttt{sep}. The attributes \texttt{na.string} and
+\texttt{null.string} define the strings to be interpreted as missing
+or empty values (default: \texttt{NA} and \texttt{NULL}). An
+additional ``advantage'' is that textdata blocks are not parsed by the
+XML parser, which can drastically reduce the memory footprint when
+reading a file, because many parsers represent the complete XML data
+as a nested tree. This results in one branch for each array element
+and typically needs much more memory than just the element itself.
+
+\subsubsection{Lists}
+
+A list contains three elements: \texttt{dimension, properties} \\ 
+and \texttt{listdata}:
+
+\begin{verbatim}              
+<!ELEMENT list (dimension, properties?, 
+                listdata) >
+<!ELEMENT listdata (list | array)*> 
+\end{verbatim}
+
+The first two are identical to
+arrays, only the \texttt{data} block is replaced by \texttt{listdata}
+which allows for recursive structures. Note that lists can have
+dimensions such that they can be indexed like arrays (like lists in R
+or cell arrays in MATLAB).
+
+\section{Open Problems}
+
+The following issues will be addressed once the basic definition of
+StatDataML has settled and I/O routines are available for more
+languages/applications (currently we have support for S, R, MATLAB and
+Octave).
+
+\begin{itemize}
+ \item Within \texttt{StatDataML.dtd} we describe how a basic dataset
+  should be organized. We (currently) do not provide definitions for
+  classes like a dataframe or time series in DTD format.  To model
+  this, we would like to have a principle of inheritance from
+  \texttt{dataset}, such that the basic DTD can be extended and an XML
+  parser can validate objects of certain classes.  To our knowledge,
+  this can not be done with standard XML (\emph{Note: any hints
+    appreciated}).  Schemes seem to offer functionality in this
+  direction, however, this is no standard yet (\emph{is it?}).
+  A potentially helpful way to circumstand this is described 
+  in the next section. 
+
+ \item Closely related to validating classes is conversion of classes
+  between applications. We want StatDataML to be powerful enough to
+  store and retrieve data objects of any participating application
+  without loss of information (\emph{Note: Is the current structure
+    good enough?}). Hence one can also transfer arbitrary objects
+  between applications (if the target application is powerful enough,
+  which is true at least for S engines). However, without explicit
+  definition of classes within StatDataML there is no canonical way of
+  notation and hence conversion of the respective objects.
+
+ \item As long as all \texttt{PCDATA} elements
+  include strings one is able to save hyper-text
+  e.g. in the source element, pointing to a web page (\emph{should we use Xlink?}).
+
+ \item Should it be possible to save binary data, e.g. mime-encoded images 
+  and sound, problems?
+
+ \item It would be helpful to have some form of authentication, which means
+ that everyone can read a \texttt{StatDataML} file but cannot manipulate the
+ data without violating the signature (\emph{Should this problem
+   really be solved within StatDataML?}).     
+
+\end{itemize}
+
+\section{User defined extensions}
+
+As we outlined in the previous section, XML does not support a
+principle like inheritance. But having the two "basic datatypes" lists
+and arrays available, one is able to create user defined classes by
+restricting the \texttt{StatDataML} framework.
+
+Think of a dataframe as known in S: a list containing vectors (here
+named \texttt{arrays}) with equal length. One would restrict the
+\texttt{StatDataML.dtd} in a file \texttt{dataframe.dtd}, say.
+
+Because of the restriction principle for user defined classes, all XML
+documents containing user defined structures are still valid
+\texttt{StatDataML} documents and can therefore be read by every
+routine that reads \texttt{StatDataML} files, even without having the
+restricting DTD and special converting routines available.
+Additionally, adding new classes does not mean changing the original
+\texttt{StatDataML} DTD.
+
+Then \texttt{dataframe.dtd} defines the syntax of a dataframe (a lists
+containing arrays), the semantics (equal length) have to be checked in
+aconverting routine \texttt{readDfSDML}.
+
+\section{Examples}
+
+\subsection{The integers from 1 to 100}
+
+\begin{verbatim}
+<?xml version="1.0"?>
+<!DOCTYPE StatDataML SYSTEM "StatDataML.dtd">
+<StatDataML>
+ <description>
+  <title>1:100</title>
+  <source>R</source>
+  <date> Wed Nov 22 20:27:24 2000 </date>
+  <version> </version>
+  <comment> </comment>
+  <creator>R-1.2.0:StatDataML</creator>
+  <class></class>
+ </description>
+ <dataset>
+  <array>
+   <dimension>
+    <dim size="100"></dim>
+   </dimension>
+   <textdata mode="integer" na.string="NA">
+    1 2 3 4 5 6 7 8 9 10
+    11 12 13 14 15 16 17 18 19 20
+    21 22 23 24 25 26 27 28 29 30
+    31 32 33 34 35 36 37 38 39 40
+    41 42 43 44 45 46 47 48 49 50
+    51 52 53 54 55 56 57 58 59 60
+    61 62 63 64 65 66 67 68 69 70
+    71 72 73 74 75 76 77 78 79 80
+    81 82 83 84 85 86 87 88 89 90
+    91 92 93 94 95 96 97 98 99 100
+   </textdata>
+  </array>
+ </dataset>
+</StatDataML>
+\end{verbatim}
+
+\subsection{The \texttt{cars} dataset from R}
+
+\begin{verbatim}
+(to be created)
+\end{verbatim}
+
+\section{Resources}
+
+\begin{itemize}
+ \item Duncan Temple Lang's XML package provides general XML parsing
+  for S engines
+  
+ \item The package StatDataML provides a beta implementation of
+  StatDataML I/O routines for S and R.  The two functions
+  \texttt{writeSDML} and \texttt{readSDML} implement writing and
+  reading for StatDataML-files.  With this implementation it will be
+  possible to write and read R data objects without loss of
+  information (there are still some bugs left \ldots).
+  
+ \item Packages for Matlab, Octave and Gnumeric will be made available
+  on the web soon.
+  
+\end{itemize}
+
+\end{document}    
+
+
+
+
+
+

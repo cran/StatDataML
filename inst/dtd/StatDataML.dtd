@@ -1,0 +1,42 @@
+<!-- StatDataML DTD version="$Revision: 1.3 $" -->
+
+<!ELEMENT StatDataML (description?, dataset?)>
+
+<!ELEMENT description (title?, source?, date?, version?, comment?, creator?, class?, properties?)>
+<!ELEMENT title (#PCDATA) >
+<!ELEMENT source (#PCDATA) >
+<!ELEMENT date (#PCDATA) >
+<!ELEMENT version (#PCDATA) >
+<!ELEMENT comment (#PCDATA) >
+<!ELEMENT creator (#PCDATA) >
+<!ELEMENT class (#PCDATA) >
+
+<!ELEMENT dataset (list | array)>
+
+<!ELEMENT list (dimension, properties?, listdata) >
+<!ELEMENT listdata (list | array)*>
+
+<!ELEMENT array (dimension, properties?, (data | textdata))>
+<!ELEMENT data (e|na)* >
+<!ATTLIST data true CDATA "1"
+	       false CDATA "0"
+	       mode (logical|nominal|ordinal|integer|real|complex|character) "character" >
+
+<!ELEMENT textdata (#PCDATA) >
+<!ATTLIST textdata sep CDATA " \n" 
+                   na.string CDATA "NA" 
+                   null.string CDATA "NULL" 
+		   true CDATA "1"
+		   false CDATA "0"
+		   mode (logical|nominal|ordinal|integer|real|complex|character) "character">
+
+<!ELEMENT e (#PCDATA) >
+<!ELEMENT na EMPTY>
+
+<!ELEMENT dimension (dim*)>
+<!ELEMENT dim (e*)>
+<!ATTLIST dim size CDATA #REQUIRED>
+
+<!ELEMENT properties (list)>
+
+
