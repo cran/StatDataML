@@ -23,9 +23,9 @@ writeSDML <- function(x,
     dtd <- system.file("dtd/StatDataML.dtd", package = "StatDataML")[1]
   
   cat("\<\?xml version=\"1.0\"\?>\n", file = file, sep = "")
-  catSDML("\<!DOCTYPE StatDataML PUBLIC \"", dtd,
-      "\" \"StatDataML.dtd\">\n", file = file)
-  catSDML("\<StatDataML xmlns=\"http://www.omega.org/StatDataML/\">\n", file = file)
+  catSDML("\<!DOCTYPE StatDataML PUBLIC \"StatDataML.dtd\" \"", dtd,
+      "\" >\n", file = file)
+  catSDML("\<StatDataML xmlns=\"http://www.omegahat.org/StatDataML/\">\n", file = file)
   
   writeDescriptionSDML(title = title, source = source,
                        version = version, date = date,

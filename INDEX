@@ -1,3 +1,2 @@
-StatDataML-internal     Internal StatDataML functions
 readSDML                Read StatDataML Files
 writeSDML               Write Data in StatDataML Format
