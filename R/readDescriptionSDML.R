@@ -1,12 +1,12 @@
 readDescriptionSDML <- function(x)
 {
-    title <- x$children[["title"]]$children$text$value
-    source <- x$children[["source"]]$children$text$value
-    date <- x$children[["date"]]$children$text$value
-    version <- x$children[["version"]]$children$text$value
-    comment <- x$children[["comment"]]$children$text$value
-    creator <- x$children[["creator"]]$children$text$value
-    class <- x$children[["class"]]$children$text$value
+    title <- xmlValue(x[["title"]][[1]])
+    source <- xmlValue(x[["source"]][[1]])
+    date <- xmlValue(x[["date"]][[1]])
+    version <- xmlValue(x[["version"]][[1]])
+    comment <- xmlValue(x[["comment"]][[1]])
+    creator <- xmlValue(x[["creator"]][[1]])
+    class <- xmlValue(x[["class"]][[1]])
     ret <- list(title=title, source=source, date=date, version=version,
                 comment=comment, creator=creator, SDMLclass=class)
     ret

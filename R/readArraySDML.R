@@ -1,30 +1,31 @@
 readArraySDML <- function(x)
 {
-    x$name <- NULL
+#    x$name <- NULL
     
     if (is.null(x)) return(NULL)
     
-    dimension <- readDimensionSDML(x$children[["dimension"]])
-    
-    attrib <- NULL
-    if (!is.null(x$children[["properties"]]))
-        attrib <- readListSDML(x$children[["properties"]]$children[["list"]])	
-    
-    if (!is.null(x$children[["data"]]) |
-        !is.null(x$children[["textdata"]]))
-    {
-        attribs <- getAttrSDML(x$children[["data"]])
+    dimension <- readDimensionSDML(x[["dimension"]])
 
-        if(!is.null(x$children[["data"]])){
-            vals <- getDataSDML(x$children[["data"]]$children)
-            mode <- x$children[["data"]]$attributes["mode"]
+    attrib <- NULL
+    if (!is.null(x[["properties"]]))
+        attrib <- readListSDML(x[["properties"]][["list"]])	
+    
+    if (!is.null(x[["data"]]) |
+        !is.null(x[["textdata"]]))
+    {
+        attribs <- getAttrSDML(x[["data"]])
+
+        if(!is.null(x[["data"]])){
+            vals <- getDataSDML(xmlChildren(x[["data"]]))
+            mode <- xmlAttrs(x[["data"]])["mode"]
         }
         else{
-            vals <- x$children[["textdata"]][["value"]]
-            mode <- x$children[["textdata"]][["mode"]]
+            vals <- x[["textdata"]][["value"]]
+            mode <- x[["textdata"]][["mode"]]
         }
+
         if (length(vals) != prod(dimension$dim))
-            stop("Wrong dimension!")
+            stop(paste("Wrong dimension !", paste(dimension$dim, collapse=", "), length(vals), collapse= " "))
             
         if (length(dimension$dim) > 1){
             vals <- array(vals, dim=dimension$dim, dimnames=dimension$names)
@@ -58,7 +59,7 @@ readArraySDML <- function(x)
 getDataSDML <- function(y) 
 {
     w <- sapply(y, function(x) ifelse(x$name=="na",
-                                      NA, x$children$text$value))
+                                      NA, xmlValue(x[[1]])))
     if(length(w)>0){
         w <-gsub("&amp;", "&", w)
         w <-gsub("&lt;", "<", w)

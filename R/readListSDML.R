@@ -2,15 +2,15 @@ readListSDML <- function(x)
 {
     if (is.null(x)) return(NULL)
     
-    if (x$name == "list")
+    if (xmlName(x) == "list")
     {
-        dimension <- readDimensionSDML(x$children[["dimension"]])
+        dimension <- readDimensionSDML(x[["dimension"]])
         
         attrib <- NULL
-        if (!is.null(x$children[["properties"]]))
-            attrib <- readListSDML(x$children[["properties"]]$children[["list"]])
+        if (!is.null(x[["properties"]]))
+            attrib <- readListSDML(x[["properties"]][["list"]])
         
-        thislist <- lapply(x$children[["listdata"]]$children, readListSDML)
+        thislist <- lapply(xmlChildren(x[["listdata"]]), readListSDML)
         
         if(names(thislist) =="array") names(thislist) <- NULL
         
@@ -29,7 +29,7 @@ readListSDML <- function(x)
         return(thislist)
     }
     
-    if (x$name =="array")
+    if (xmlName(x) =="array")
     {
         return(readArraySDML(x))
     }

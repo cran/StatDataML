@@ -2,11 +2,11 @@ readDimensionSDML <- function(x)
 {
     dim <- NULL
     names <- list()
-    if(x$name =="dimension"){
-        if(length(x$children)){
-            for(k in 1:length(x$children)){
-                dim[k] <- x$children[[k]]$attributes["size"]
-                names[[k]] <- getDataSDML(x$children[[k]]$children)
+    if(xmlName(x) =="dimension"){
+        if(xmlSize(x)){
+            for(k in 1:xmlSize(x)){
+                dim[k] <- xmlAttrs(x[[k]])["size"]
+                names[[k]] <- getDataSDML(xmlChildren(x[[k]]))
             }
         }
         else

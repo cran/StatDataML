@@ -3,12 +3,12 @@ readDatasetSDML <- function(x)
 	
     ## a dataset contains either a list or an array 
 	
-    if(!is.null(x$children[["list"]]))
+    if(!is.null(x[["list"]]))
     { 
-        return(readListSDML(x$children[["list"]]))
+        return(readListSDML(x[["list"]]))
     }
-    if(!is.null(x$children[["array"]]))
+    if(!is.null(x[["array"]]))
     { 
-        return(readArraySDML(x$children[["array"]]))
+        return(readArraySDML(x[["array"]]))
     }
 }

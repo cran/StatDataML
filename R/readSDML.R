@@ -4,24 +4,24 @@ readSDML <- function(file="", text=NULL, validate=FALSE,
     if (is.null(text))
     {
         tree <- xmlTreeParse(file=file, asText=FALSE, validate=validate,
-                             handler=handlersSDML)
+                             handler=handlersSDML(), asTree=T)
     } else { 
         tree <- xmlTreeParse(file=text, asText=TRUE, validate=validate,
-                             handler=handlersSDML)
+                             handler=handlersSDML(), asTree=T)
     }
     
     ## is this file a StatDataML file ?    
-    if (!is.null(tree$doc$children[["StatDataML"]]))
+    if (xmlName(xmlRoot(tree)) == "StatDataML")
     {
-        statxml <- tree$doc$children[["StatDataML"]]
-        if (!is.null(statxml$children[["description"]]) && read.description)
+        statxml <- xmlRoot(tree)
+        if (!is.null(statxml[["description"]]) && read.description)
         {
             description <-
-                readDescriptionSDML(statxml$children[["description"]])
+                readDescriptionSDML(statxml[["description"]])
         }
-        if (!is.null(statxml$children[["dataset"]]))
+        if (!is.null(statxml[["dataset"]]))
         {
-            dataset <- readDatasetSDML(statxml$children[["dataset"]])
+            dataset <- readDatasetSDML(statxml[["dataset"]])
         }
     }
     else

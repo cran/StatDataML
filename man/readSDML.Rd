@@ -19,7 +19,7 @@ readSDML(file="", text=NULL, validate=FALSE, read.description=FALSE)
 }
 \value{
   a data object with an additional \code{SDMLdescription} attribute}
-\author{Torsten Hothorn <hothorn@ci.tuwien.ac.at> and Friedrich Leisch
+\author{Torsten Hothorn <Torsten.Hothorn@rzmail.uni-erlangen.de> and Friedrich Leisch
   <leisch@ci.tuwien.ac.at>}
 \seealso{see also \code{\link{writeSDML}}}
 

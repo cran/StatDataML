@@ -30,7 +30,7 @@ function (x, file = "", textdata = NULL, dtd = NULL, sep = " \\n",
 }
 \details{For details on the \code{StatDataML} format see the proposal.
 }
-\author{Torsten Hothorn <hothorn@ci.tuwien.ac.at> and Friedrich
+\author{Torsten Hothorn <Torsten.Hothorn@rzmail.uni-erlangen.de> and Friedrich
   Leisch<leisch@ci.tuwien.ac.at>} 
 \seealso{\code{\link{readSDML}}}
 
