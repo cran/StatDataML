@@ -1,0 +1,28 @@
+\name{StatDataML-internal}
+\alias{readDimensionSDML}
+\alias{writeDimensionSDML}
+\alias{readDfSDML}
+\alias{catSDML}
+\alias{etagsSDML}
+\alias{getAttrSDML}
+\alias{handlersSDML}
+\alias{writeDatasetSDML}
+\alias{readArraySDML}
+\alias{readListSDML}
+\alias{writeDescriptionSDML}
+\alias{readDatasetSDML}
+\alias{readProperties}
+\alias{writeDfSDML}
+\alias{readDescriptionSDML}
+\alias{writePropertiesSDML}
+\alias{getDataSDML}
+\alias{writeListArraySDML}
+\title{Internal StatDataML functions}
+\description{
+  Internal StatDataML functions.
+}
+\usage{}
+\details{
+  These are not to be called by the user.
+}
+\keyword{internal}

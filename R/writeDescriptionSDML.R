@@ -7,7 +7,7 @@ writeDescriptionSDML <- function(title="RDataset", source="R",
     catSDML("<description>\n", file=file)
     catSDML("<title>", title, "</title>\n", file=file)
     catSDML("<source>", source, "</source>\n", file=file)
-    cat("<date>", date, "</date>\n", file=file, append=T, sep=" ")
+    cat("<date>", date, "</date>\n", file=file, append=TRUE, sep=" ")
     catSDML("<version>", version, "</version>\n", file=file)
     catSDML("<comment>", comment, "</comment>\n", file=file)
     sdmlib <- .path.package("StatDataML")

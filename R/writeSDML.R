@@ -7,12 +7,12 @@ writeSDML <- function(x, file="", textdata=NULL,
 {
     if(is.null(date)) { date <- date() }
     if(is.null(dtd)){
-        dtd <- system.file("dtd/StatDataML.dtd", pkg="StatDataML")[1]
+        dtd <- system.file("dtd/StatDataML.dtd", package="StatDataML")[1]
     }
     cat("\<\?xml version=\"1.0\"\?>\n", file=file, sep="")
     cat("\<!DOCTYPE StatDataML SYSTEM \"", dtd,
-        "\">\n", file=file, append=T, sep="")
-    cat("\<StatDataML>\n", file=file, append=T, sep="")
+        "\">\n", file=file, append=TRUE, sep="")
+    cat("\<StatDataML>\n", file=file, append=TRUE, sep="")
     writeDescriptionSDML(title=title, source=source,
                          version=version, date=date,
                          comment=comment,file=file,
@@ -20,7 +20,7 @@ writeSDML <- function(x, file="", textdata=NULL,
     writeDatasetSDML(x, file=file, textdata=textdata, sep=sep,
                      na.string=na.string,
                      null.string=null.string)	
-    cat("\</StatDataML>\n", file=file, append=T, sep="")
+    cat("\</StatDataML>\n", file=file, append=TRUE, sep="")
 }
 
 

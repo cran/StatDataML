@@ -5,5 +5,5 @@ writeDfSDML <- function(x, file="")
 		if(!is.data.frame(x))
 			stop("x is not a data.frame")
 
-		writeSDML(x, file=file, dtd=system.file("dtd/dataframe.dtd", pkg="StatDataML"), SDMLclass="dataframe")
+		writeSDML(x, file=file, dtd=system.file("dtd/dataframe.dtd", package="StatDataML"), SDMLclass="dataframe")
 }

@@ -6,10 +6,9 @@
   standard output
 }
 \usage{
-function (x, file = "", textdata = NULL, dtd = NULL, sep = " \\n",
-    na.string = "NA", null.string = "NULL", title = deparse(substitute(x)), 
-    source = "R", version = " ", date = NULL, comment = " ", 
-    class = "") 
+writeSDML(x, file = "", textdata = NULL, dtd = NULL, sep = " \\n",
+na.string = "NA", null.string = "NULL", title = deparse(substitute(x)),
+source = "R", version = " ", date = NULL, comment = " ", class = "") 
 }
 \arguments{
   \item{x}{a data object.}
@@ -26,7 +25,8 @@ function (x, file = "", textdata = NULL, dtd = NULL, sep = " \\n",
   \item{source}{the source of the data being saved (string).}
   \item{version}{the version of the data being saved (string).}
   \item{comment}{a free form commentary for the data being saved (string).}
-  \item{date}{a free form date element, date() by default}
+  \item{date}{a free form date element, date() by default.}
+  \item{class}{data class (provided for future enhancements).}
 }
 \details{For details on the \code{StatDataML} format see the proposal.
 }

@@ -1,4 +1,4 @@
-catSDML <- function(...) cat(..., append=T, sep="")
+catSDML <- function(...) cat(..., append=TRUE, sep="")
 
 etagsSDML <- function(x, ...)
 {

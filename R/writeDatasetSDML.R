@@ -6,11 +6,11 @@ writeDatasetSDML <- function(x, file, textdata,
 
     if (is.null(x)) return(NULL)
     
-    cat("<dataset>\n", file=file, append=T, sep="")
+    cat("<dataset>\n", file=file, append=TRUE, sep="")
     
     writeListArraySDML(x, file=file, textdata=textdata,
                        sep=sep, na.string=na.string,
                        null.string=null.string)
     
-    cat("</dataset>\n", file=file, append=T, sep="")
+    cat("</dataset>\n", file=file, append=TRUE, sep="")
 }
