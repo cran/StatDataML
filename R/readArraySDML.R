@@ -36,8 +36,8 @@ readArraySDML <- function(x)
     if (length(dimension$dim) > 1) {
       vals <- array(vals, dim=dimension$dim, dimnames=dimension$names)
       if (!is.null(x[["data"]])) {
-        str(info)
-        info <- array(info, dim=dimension$dim, dimnames=dimension$names)
+        if (!is.null(info))
+          info <- array(info, dim=dimension$dim, dimnames=dimension$names)
       }
     } else {
       if (!length(vals))

@@ -89,7 +89,7 @@ writeListArraySDML <- function(x,
     
     x <- switch (type,
                  logical = if (textdata) ifelse(x, true, false) else x,
-                 categorical = codes(x),
+                 categorical = as.numeric(x),
                  numeric = x,
                  datetime = as.character(x, format="%Y-%m-%dT%H:%M:%S"),
                  character = gsub("<", "&lt;", gsub(">", "&gt;", gsub("&", "&amp;", x)))
