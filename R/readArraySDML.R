@@ -82,7 +82,7 @@ readArraySDML <- function(x)
         vals <- as.POSIXct(strptime(vals, format="%Y-%m-%dT%H:%M:%S"))
 
       if (type$type == "character")
-        vals <- as.character(vals)
+        vals[] <- as.character(vals)
     }
     
     atvals <- attributes(vals)

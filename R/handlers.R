@@ -47,6 +47,23 @@ handlersSDML <- function() {
                         ),
                    class = "XMLNode"
                    )
-       })
+       },
+       e = function(x, ...) {
+         info <- ifelse("info" %in% names(xmlAttrs(x)),
+           xmlAttrs(x)["info"], NA)
+         children <- if(!length(xmlChildren(x)))
+           NULL
+         else
+           xmlChildren(x)
+         structure(list(children = children,
+                        name = "e",
+                        attributes = c(
+                          info = info
+                         )
+                        ),
+                   class = "XMLNode"
+                   )
+       }
+       )
 }
 
