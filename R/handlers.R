@@ -1,16 +1,53 @@
 handlersSDML <- function() {
-    list(
-         textdata = function(x, ...){
-
-             sep <- ifelse("sep" %in% names(xmlAttrs(x)),
-                           xmlAttrs(x)["sep"], " \n")
-             sep <- paste("[", sep, "]+", sep="")
-
-             mode <- ifelse("mode" %in% names(xmlAttrs(x)),
-                           xmlAttrs(x)["mode"], "")
-
-             list(value=unlist(strsplit(xmlValue(x[[1]]), sep)),
-                  mode=mode)
-         })
+  list(
+       textdata = function(x, ...) {
+         
+         sep <- ifelse("sep" %in% names(xmlAttrs(x)),
+                       xmlAttrs(x)["sep"], " \n")
+         sep <- gsub("\\\\n", "\n", sep) ## change \\n back to \n
+         sep <- paste("[", sep, "]+", sep="")
+         
+         type <- ifelse("type" %in% names(xmlAttrs(x)),
+           xmlAttrs(x)["type"], "character")
+         mode <- NULL
+         if ("mode" %in% names(xmlAttrs(x)))
+           mode <- as.character(xmlAttrs(x)["mode"])
+         posinf <- ifelse("posinf.string" %in% names(xmlAttrs(x)),
+           xmlAttrs(x)["posinf.string"], "+Inf")
+         neginf <- ifelse("neginf.string" %in% names(xmlAttrs(x)),
+           xmlAttrs(x)["neginf.string"],"-Inf")
+         nan <- ifelse("nan.string" %in% names(xmlAttrs(x)),
+           xmlAttrs(x)["nan.string"], "NaN")
+         na <- ifelse("na.string" %in% names(xmlAttrs(x)),
+           xmlAttrs(x)["na.string"], "NA")
+         null <- ifelse("null.string" %in% names(xmlAttrs(x)),
+           xmlAttrs(x)["null.string"], "NULL")
+         true <- ifelse("true" %in% names(xmlAttrs(x)),
+           xmlAttrs(x)["true"], "1")
+         false <- ifelse("false" %in% names(xmlAttrs(x)),
+           xmlAttrs(x)["false"], "0")
+         
+         children <- if(is.null(x[[1]]))
+           NULL
+         else
+           list(unlist(strsplit(xmlValue(x[[1]]), sep)))
+         
+         structure(list(children = children,
+                        name = "textdata",
+                        attributes = c(
+                          type = type,
+                          mode = mode,
+                          posinf.string = posinf,
+                          neginf.string = neginf,
+                          nan.string = nan,
+                          na.string = na,
+                          null.string = null,
+                          true = true,
+                          false = false
+                         )
+                        ),
+                   class = "XMLNode"
+                   )
+       })
 }
 

@@ -1,13 +1,15 @@
 readDescriptionSDML <- function(x)
 {
-    title <- xmlValue(x[["title"]][[1]])
-    source <- xmlValue(x[["source"]][[1]])
-    date <- xmlValue(x[["date"]][[1]])
-    version <- xmlValue(x[["version"]][[1]])
-    comment <- xmlValue(x[["comment"]][[1]])
-    creator <- xmlValue(x[["creator"]][[1]])
-    class <- xmlValue(x[["class"]][[1]])
-    ret <- list(title=title, source=source, date=date, version=version,
-                comment=comment, creator=creator, SDMLclass=class)
-    ret
+  if(is.null(x)) return(NULL)
+  
+  list(
+       title      = xmlValue(x[["title"]]),
+       source     = xmlValue(x[["source"]]),
+       date       = xmlValue(x[["date"]]),
+       version    = xmlValue(x[["version"]]),
+       comment    = xmlValue(x[["comment"]]),
+       creator    = xmlValue(x[["creator"]]),
+       SDMLclass  = xmlValue(x[["class"]]),
+       properties = readProperties(x[["properties"]])
+       )
 }

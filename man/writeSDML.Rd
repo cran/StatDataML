@@ -7,8 +7,10 @@
 }
 \usage{
 writeSDML(x, file = "", textdata = NULL, dtd = NULL, sep = " \\n",
-na.string = "NA", null.string = "NULL", title = deparse(substitute(x)),
-source = "R", version = " ", date = NULL, comment = " ", class = "") 
+na.string = "NA", null.string = "NULL", posinf.string = "+Inf",
+neginf.string = "-Inf", nan.string = "NaN", true = "1", false = "0",
+title = deparse(substitute(x)), source = "R", version = " ",
+date = NULL, comment = " ", class = "") 
 }
 \arguments{
   \item{x}{a data object.}
@@ -19,8 +21,14 @@ source = "R", version = " ", date = NULL, comment = " ", class = "")
     arrays in \code{data} blocks.}
   \item{dtd}{location of the StatDataML DTD.}
   \item{sep}{field separator for \code{textdata} blocks.}
-  \item{na.string}{the string which should be interpreted as NA element.}
-  \item{null.string}{the string which should be interpreted as NULL element.}
+  \item{na.string}{the string which should be interpreted as \code{NA} element.}
+  \item{null.string}{the string which should be interpreted as NULL
+    string.}
+  \item{posinf.string}{the string which should be interpreted as \code{+Inf}.}
+  \item{neginf.string}{the string which should be interpreted as \code{-Inf}.}
+  \item{nan.string}{the string which should be interpreted as
+    \code{NaN}.}
+  \item{true, false}{the strings which should be interpreted as \code{TRUE}/\code{FALSE}.}
   \item{title}{the title of the data being saved (string).}
   \item{source}{the source of the data being saved (string).}
   \item{version}{the version of the data being saved (string).}

@@ -1,4 +1,4 @@
 readProperties <- function(x)
 {
-	return(readListSDML(x[["list"]], readProp=FALSE))
+	return(readListSDML(x[["list"]]))
 }

@@ -16,6 +16,13 @@
 \alias{readDescriptionSDML}
 \alias{writePropertiesSDML}
 \alias{getDataSDML}
+\alias{getComplexDataSDML}
+\alias{default}
+\alias{tags}
+\alias{getTextDataSDML}
+\alias{cetagsSDML}
+\alias{readCategoriesSDML}
+\alias{writeCategoriesSDML}
 \alias{writeListArraySDML}
 \title{Internal StatDataML functions}
 \description{

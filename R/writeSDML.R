@@ -1,26 +1,43 @@
-writeSDML <- function(x, file="", textdata=NULL,
-                      dtd=NULL, sep=" \\n",
-                      na.string="NA", null.string="NULL",
-                      title=deparse(substitute(x)), source="R",
-                      version=" ", date=NULL, comment=" ",
-                      class="")
+writeSDML <- function(x,
+                      file = "",
+                      textdata = NULL,
+                      dtd = NULL,
+                      sep = " \\n",
+                      na.string = "NA",
+                      null.string = "NULL",
+                      posinf.string = "+Inf",
+                      neginf.string = "-Inf",
+                      nan.string = "NaN",
+                      true = "1",
+                      false = "0",
+                      title = deparse(substitute(x)),
+                      source = "R",
+                      version = " ",
+                      date = NULL,
+                      comment = " ",
+                      class = "")
 {
-    if(is.null(date)) { date <- date() }
-    if(is.null(dtd)){
-        dtd <- system.file("dtd/StatDataML.dtd", package="StatDataML")[1]
-    }
-    cat("\<\?xml version=\"1.0\"\?>\n", file=file, sep="")
-    cat("\<!DOCTYPE StatDataML SYSTEM \"", dtd,
-        "\">\n", file=file, append=TRUE, sep="")
-    cat("\<StatDataML>\n", file=file, append=TRUE, sep="")
-    writeDescriptionSDML(title=title, source=source,
-                         version=version, date=date,
-                         comment=comment,file=file,
-                         class=class)
-    writeDatasetSDML(x, file=file, textdata=textdata, sep=sep,
-                     na.string=na.string,
-                     null.string=null.string)	
-    cat("\</StatDataML>\n", file=file, append=TRUE, sep="")
+  if (is.null(date)) date <- date()
+  if (is.null(dtd))
+    dtd <- system.file("dtd/StatDataML.dtd", package = "StatDataML")[1]
+  
+  cat("\<\?xml version=\"1.0\"\?>\n", file = file, sep = "")
+  catSDML("\<!DOCTYPE StatDataML PUBLIC \"", dtd,
+      "\" \"StatDataML.dtd\">\n", file = file)
+  catSDML("\<StatDataML xmlns=\"http://www.omega.org/StatDataML/\">\n", file = file)
+  
+  writeDescriptionSDML(title = title, source = source,
+                       version = version, date = date,
+                       comment = comment, file = file,
+                       class = class)
+  
+  writeDatasetSDML(x, file = file, textdata = textdata, sep = sep,
+                   na.string = na.string, null.string = null.string,
+                   posinf.string = posinf.string, neginf.string = neginf.string,
+                   true = true, false = false, nan.string = nan.string)
+  
+  catSDML("\</StatDataML>\n", file = file)
 }
+
 
 
