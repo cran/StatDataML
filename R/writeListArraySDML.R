@@ -30,8 +30,39 @@ writeListArraySDML <- function(x,
     ## dimension tag
     writeDimensionSDML(x, file = file)
 
-    ## properties tag
-    ## (remove factor/POSIXxx attributes information first)
+    ## prepare properties tag:
+    ## check the datatype
+    type <- if (inherits(x, "POSIXt"))
+      "datetime"
+    else if (is.character(x))
+      "character"
+    else if (is.factor(x))
+      "categorical"
+    else if (is.logical(x))
+      "logical"
+    else
+      "numeric"
+    
+    ## check the mode
+    mode <- NULL
+    if (type == "numeric")
+      mode <- if (is.integer(x))
+        "integer"
+      else if (is.real(x))
+        "real"
+      else
+        "complex"
+    if (type == "categorical")
+      mode <- if (is.ordered(x))
+        "ordered"
+      else
+        "unordered"
+    
+    ## write type tag
+    writeTypeSDML(x, type, mode, file = file)
+
+    ## write properties tag
+    ## remove factor/POSIXxx attributes first
     xtmp <- x
     if (is.factor(x)) {
       attr(xtmp, "levels") <- NULL
@@ -39,67 +70,42 @@ writeListArraySDML <- function(x,
     }
     if (inherits(x, "POSIXt"))
       class(xtmp) <- class(xtmp)[!class(xtmp) %in% c("POSIXt","POSIXct","POSIXlt")]
+
     writePropertiesSDML(attributes(xtmp), file = file)
 
-    ## nominalCategories tag
-    if (is.factor(x)) writeCategoriesSDML(x, file = file)
-    
-    ## check the datatype
-    mode <- NULL
-    if (inherits(x, "POSIXt")) {
-      type <- "datetime"
-      x <- as.character(x, format="%Y-%m-%dT%H:%M:%S")
-    } else {
-      type <- "numeric"
-      if (is.integer(x)) mode <- "integer"
-      if (is.real(x)) mode <- "real"
-      if (is.complex(x)) mode <- "complex"
-      if (is.character(x)) type <- "character"
-    }
-    if (is.logical(x)) {
-      type <- "logical"
-      x <- ifelse(x, true, false)
-    }
-    if (is.factor(x)) {
-      type <- "nominal"
-      mode <- if (is.ordered(x)) "ordered" else "unordered"
-      x <- codes(x)
-    }
+    ## write data
+    x <- switch (type,
+                 logical = ifelse(x, true, false),
+                 categorical = codes(x),
+                 numeric = x,
+                 datetime = as.character(x, format="%Y-%m-%dT%H:%M:%S"),
+                 character = gsub("<", "&lt;", gsub(">", "&gt;", gsub("&", "&amp;", x)))
+                 )
+
     if (is.null(textdata))
       textdata <- type != "character" && type != "datetime"
     
-    if (is.character(x)) {
-      x <- gsub("&", "&amp;", x)
-      x <- gsub("<", "&lt;", x)
-      x <- gsub(">", "&gt;", x)
-    }
-
     if (textdata) {
       ## textdata tag
-      catSDML("\<textdata type=\"", type, "\"",
-              " sep=\"", sep, "\"",
-              if (!is.null(mode))
-              paste(" mode=\"", mode, "\"", sep = ""),
+      catSDML("\<textdata sep=\"", sep, "\"",
               if (any(is.na(x[!is.nan(x)])))
-              paste(" na.string=\"", na.string, "\"", sep = ""),
+                paste(" na.string=\"", na.string, "\"", sep = ""),
               if (type == "character")
-              paste(" null.string=\"", null.string, "\"", sep = ""),
+                paste(" null.string=\"", null.string, "\"", sep = ""),
               if (type == "numeric") paste(
                     if (any(is.nan(x)))
-                    paste(" nan.string=\"", nan.string, "\"", sep = ""),
+                      paste(" nan.string=\"", nan.string, "\"", sep = ""),
                     if (any(x == Inf, na.rm = TRUE))
-                    paste(" posinf.string=\"", posinf.string, "\"", sep = ""),
+                      paste(" posinf.string=\"", posinf.string, "\"", sep = ""),
                     if (any(x == -Inf, na.rm = TRUE))
-                    paste(" neginf.string=\"", neginf.string, "\"", sep = ""),
+                      paste(" neginf.string=\"", neginf.string, "\"", sep = ""),
                     sep = ""),
-              if (type == "logical")
-              paste(
+              if (type == "logical") paste(
                     if (any(x == true, na.rm = TRUE))
-                    paste(" true=\"", true, "\"", sep=""),
+                      paste(" true=\"", true, "\"", sep=""),
                     if (any(x == false, na.rm = TRUE))
-                    paste(" false=\"", false, "\"", sep=""),
-                    sep=""
-                    ),
+                      paste(" false=\"", false, "\"", sep=""),
+                    sep = ""),
               ">",
               file = file
               )
@@ -123,10 +129,6 @@ writeListArraySDML <- function(x,
           x[x == "FALSE"] <- false
         }
 
-        x <- gsub("&", "&amp;", x)
-        x <- gsub("<", "&lt;", x)
-        x <- gsub(">", "&gt;", x)
-        
         ## write data
         cat(x, sep=c(rep(substr(sep, 1, 1), 9), "\n"), file = file, append = TRUE)
       }
@@ -134,9 +136,7 @@ writeListArraySDML <- function(x,
       catSDML("</textdata>\n", file = file)
     } else {
       ## data tag
-      catSDML("\<data type=\"", type, "\"",
-              if (!is.null(mode))
-              paste(" mode=\"", mode, "\"", sep = ""),
+      catSDML("\<data",
               if (type == "logical")
               paste(
                     if (any(x == true, na.rm = TRUE))
@@ -151,6 +151,9 @@ writeListArraySDML <- function(x,
       if (length(x)) {
         catSDML("\n", file = file)
       
+        if(!is.null(a <- attr(xtmp, "info")))
+          attr(x, "info") <- a
+
         ## write data
         if (type == "numeric" && !is.null(mode) && mode == "complex")
           cetagsSDML(x, file = file)
@@ -213,12 +216,31 @@ writePropertiesSDML <- function(attrib, file)
   }
 }
 
-writeCategoriesSDML <- function(x, file)
+writeTypeSDML <- function(x, type, mode, file)
 {
-  catSDML("\<nominalCategories>\n", file = file)
+  catSDML("\<type>", file = file)
 
-  for (i in 1:length(levels(x)))
-    catSDML("\<label code=\"", i, "\">", levels(x)[i], "\</label\>\n", file = file)
-
-  catSDML("\</nominalCategories>\n", file = file)	
+  if (type %in% c("logical", "character", "datetime"))
+    catSDML(" \<", type, "/\> ", file = file)
+  else if (type == "numeric") {
+    catSDML("\<numeric\>", file = file)
+    if (mode == "complex") {
+      catSDML("\n\<complex/\>\n", file = file)
+    } else {
+      catSDML("\<",mode,"\>\n", file = file)
+      tags(min(x, na.rm = TRUE), "min", file = file)
+      tags(max(x, na.rm = TRUE), "max", file = file)
+      catSDML("\n\</",mode,"\>", file = file)
+    }
+    
+    catSDML("\</numeric>", file = file)	
+  } else {## categorical
+    catSDML("\n\<categorical mode=\"", mode, "\"\>\n", file = file)
+    for (i in 1:length(levels(x)))
+      catSDML("\<label code=\"", i, "\">", levels(x)[i], "\</label\>\n", file = file)
+    catSDML("</categorical\>\n", file = file)	
+  }
+  
+  catSDML("\</type>\n", file = file)	
 }
+

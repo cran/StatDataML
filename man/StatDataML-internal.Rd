@@ -18,6 +18,8 @@
 \alias{getDataSDML}
 \alias{getComplexDataSDML}
 \alias{default}
+\alias{readType}
+\alias{writeTypeSDML}
 \alias{tags}
 \alias{getTextDataSDML}
 \alias{cetagsSDML}

@@ -15,7 +15,8 @@ writeSDML <- function(x,
                       version = " ",
                       date = NULL,
                       comment = " ",
-                      class = "")
+                      class = "",
+                      properties = NULL)
 {
   if (is.null(date)) date <- date()
   if (is.null(dtd))
@@ -29,7 +30,11 @@ writeSDML <- function(x,
   writeDescriptionSDML(title = title, source = source,
                        version = version, date = date,
                        comment = comment, file = file,
-                       class = class)
+                       class = class, properties = properties,
+                       textdata = textdata, sep = sep,
+                       na.string = na.string, null.string = null.string,
+                       posinf.string = posinf.string, neginf.string = neginf.string,
+                       true = true, false = false, nan.string = nan.string)
   
   writeDatasetSDML(x, file = file, textdata = textdata, sep = sep,
                    na.string = na.string, null.string = null.string,

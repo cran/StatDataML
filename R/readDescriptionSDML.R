@@ -1,6 +1,8 @@
 readDescriptionSDML <- function(x)
 {
   if(is.null(x)) return(NULL)
+
+  browser()
   
   list(
        title      = xmlValue(x[["title"]]),

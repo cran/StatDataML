@@ -5,30 +5,29 @@ readArraySDML <- function(x)
   ## parse dimension
   dimension <- readDimensionSDML(x[["dimension"]])
 
+  ## parse categories
+  type <- readType(x[["type"]])
+  
   ## parse properties
   attrib <- readProperties(x[["properties"]])
 
-  ## parse categories
-  labels <- readCategoriesSDML(x[["nominalCategories"]])
-  
+  info <- NULL
+
   if (!is.null(x[["data"]]) || !is.null(x[["textdata"]])) {
     
     if(!is.null(x[["data"]])) {
       attribs <- getAttrSDML(x[["data"]])
-      type <- attribs[["type"]]
-      mode <- default(attribs, "mode", NULL)
-      vals <- if (!is.null(type) && type == "numeric" && mode == "complex")
-          getComplexDataSDML(xmlChildren(x[["data"]]))
+      vals <- if (!is.null(type$type) && type$type == "numeric" && type$mode == "complex")
+        getComplexDataSDML(xmlChildren(x[["data"]]))
       else
         getDataSDML(xmlChildren(x[["data"]]))
+      info <- attr(vals, "info")
     } else {
       attribs <- getAttrSDML(x[["textdata"]])
-      type <- attribs[["type"]]
-      mode <- default(attribs, "mode", NULL)
       vals <- if (is.null(xmlChildren(x[["textdata"]])))
         character()
       else
-        getTextDataSDML(xmlChildren(x[["textdata"]])[[1]], attribs, type)
+        getTextDataSDML(xmlChildren(x[["textdata"]])[[1]], attribs, type$type)
     }
 
     if (length(vals) != prod(dimension$dim))
@@ -36,6 +35,8 @@ readArraySDML <- function(x)
     
     if (length(dimension$dim) > 1) {
       vals <- array(vals, dim=dimension$dim, dimnames=dimension$names)
+      if (!is.null(x[["data"]]))
+         info <- array(info, dim=dimension$dim, dimnames=dimension$names)
     } else {
       if (!length(vals))
         vals <- vector()
@@ -45,9 +46,9 @@ readArraySDML <- function(x)
     }
 
     ## handle types
-    if (!is.null(type)) {
+    if (!is.null(type$type)) {
       
-      if (type == "logical") {
+      if (type$type == "logical") {
         tr <- as.character(default(attribs, "true", "1"))
         fa <- as.character(default(attribs, "false", "0"))
         vals1 <- vals == tr
@@ -56,41 +57,52 @@ readArraySDML <- function(x)
         vals[vals != vals2] <- NA
       }
       
-      if (type == "numeric") {
-        if (mode %in% c("integer", "real", "complex"))
-          mode(vals) <- mode
+      if (type$type == "numeric") {
+        if (type$mode %in% c("integer", "real", "complex"))
+          mode(vals) <- type$mode
         else ## default mode if none
           mode(vals) <- "double"
+
+        if (type$mode %in% c("integer", "real") &&
+            (min(vals, na.rm=TRUE) < type$min || 
+             max(vals, na.rm=TRUE) > type$max))
+          warning("numeric values out of specified range.", call. = FALSE)
       }
       
-      if (type == "nominal") {
-        if (mode == "ordered")
-          vals <- ordered(as.integer(vals), labels = labels)
+      if (type$type == "categorical") {
+        if (type$mode == "ordered")
+          vals <- ordered(as.integer(vals), labels = type$labels)
         else
-          vals <- factor(as.integer(vals), labels = labels)
+          vals <- factor(as.integer(vals), labels = type$labels)
       }
       
-      if (type == "datetime")
+      if (type$type == "datetime")
         vals <- as.POSIXct(strptime(vals, format="%Y-%m-%dT%H:%M:%S"))
 
-      if (type == "character")
+      if (type$type == "character")
         vals <- as.character(vals)
     }
     
     atvals <- attributes(vals)
     if (!is.null(atvals)) attrib <- c(attrib, atvals)
     if (!is.null(attrib)) attributes(vals) <- attrib
-    
+    if (!is.null(info))
+      attr(vals, "info") <- info
     return(vals)
   }
 }
 
-getComplexDataSDML <- function(y)
-  as.complex(sapply(y, function(x) {
+getComplexDataSDML <- function(y) {
+  ret <- as.complex(sapply(y, function(x) {
     if (x$name=="na") return(NA)
     cs <- getDataSDML(xmlChildren(x))
     complex(1, as.double(cs[1]), as.double(cs[2]))
   }))
+  i <- sapply(y, function(x) if (is.null(a <- getAttrSDML(x)[["info"]])) NA else a)
+  attributes(i) <- NULL
+  if (!all(is.na(i))) attr(ret, "info") <- i
+  ret
+}
 
 getDataSDML <- function(y) 
 {
@@ -105,6 +117,10 @@ getDataSDML <- function(y)
                                           )
                                    )
                 )
+    attributes(w) <- NULL
+
+    i <- sapply(y, function(x) if (is.null(a <- getAttrSDML(x)[["info"]])) NA else a)
+    attributes(i) <- NULL
     
     if(is.character(w)) {
         w <- gsub("&amp;", "&", w)
@@ -112,7 +128,7 @@ getDataSDML <- function(y)
         w <- gsub("&gt;", ">", w)
     }
 
-    attributes(w) <- NULL
+    if (!all(is.na(i))) attr(w, "info") <- i
     w
 }
 
@@ -138,3 +154,7 @@ getTextDataSDML <- function(y, attribs, type)
 
 default <- function (attr, name, defval) 
   if (name %in% names(attr)) attr[name] else defval
+
+
+
+

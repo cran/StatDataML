@@ -1,37 +1,65 @@
-<!-- StatDataML DTD version="0.3" -->
+<!-- StatDataML DTD version="1.0" -->
 
 <!ELEMENT StatDataML (description?, dataset?)>
 
-<!ELEMENT description (title?, source?, date?, version?, comment?, creator?, class?, properties?)>
-<!ELEMENT title (#PCDATA) >
-<!ELEMENT source (#PCDATA) >
-<!ELEMENT date (#PCDATA) >
-<!ELEMENT version (#PCDATA) >
-<!ELEMENT comment (#PCDATA) >
-<!ELEMENT creator (#PCDATA) >
-<!ELEMENT class (#PCDATA) >
+<!-- document description tags -->
+
+<!ELEMENT description (title?, source?, date?, version?,
+                       comment?, creator?, class?, properties?)>
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT source (#PCDATA)>
+<!ELEMENT date (#PCDATA)>
+<!ELEMENT version (#PCDATA)>
+<!ELEMENT comment (#PCDATA)>
+<!ELEMENT creator (#PCDATA)>
+<!ELEMENT class (#PCDATA)>
+<!ELEMENT properties (list)>
+
+<!-- basic elements -->
 
 <!ELEMENT dataset (list | array)>
 
-<!ELEMENT list (dimension, properties?, listdata) >
+<!ELEMENT list (dimension, properties?, listdata)>
 <!ELEMENT listdata (list | array | empty)*>
-
 <!ELEMENT empty EMPTY>
 
-<!ELEMENT array (dimension, properties?, nominalCategories?, (data | textdata))>
+<!ELEMENT array (dimension, type, properties?, (data | textdata))>
 
-<!ELEMENT nominalCategories (label)+>
+<!-- dimension elements -->
+
+<!ELEMENT dimension (dim*)>
+<!ELEMENT dim (e*)>
+<!ATTLIST dim size CDATA #REQUIRED>
+<!ATTLIST dim name CDATA #IMPLIED>
+
+<!-- type elements -->
+
+<!ELEMENT type (logical | categorical | numeric | character | datetime)>
+
+<!ELEMENT logical EMPTY>
+
+<!ELEMENT categorical (label)+>
+<!ATTLIST categorical mode (unordered | ordered | cyclic) "unordered">
 <!ELEMENT label (#PCDATA)>
 <!ATTLIST label code CDATA #REQUIRED>
 
-<!ENTITY % TYPES "logical|nominal|numeric|character|datetime">
-<!ENTITY % MODES "unordered|ordered|cyclic|integer|real|complex">
+<!ELEMENT numeric (integer | real | complex)?>
+<!ELEMENT integer (min?, max?)>
+<!ELEMENT real (min?, max?)>
+<!ELEMENT complex>
+<!ENTITY % RANGE "#PCDATA | posinf | neginf">
+<!ELEMENT min (%RANGE;)>
+<!ELEMENT max (%RANGE;)>
+
+<!ELEMENT character EMPTY>
+
+<!ELEMENT datetime EMPTY>
+
+<!-- data/textdata tags -->
 
 <!ELEMENT data (e|ce|na)* >
 <!ATTLIST data true  CDATA "1"
-               false CDATA "0"
-               type (%TYPES;) "character"
-               mode (%MODES;) #IMPLIED>
+               false CDATA "0">
 
 <!ELEMENT textdata (#PCDATA) >
 <!ATTLIST textdata sep CDATA " \n" 
@@ -41,29 +69,28 @@
 		   neginf.string CDATA "-Inf"
 		   nan.string    CDATA "NaN"
 		   true CDATA "1"
-		   false CDATA "0"
-                   type (%TYPES;) "character"
-                   mode (%MODES;) #IMPLIED>
+		   false CDATA "0">
+
+<!-- e/ce/na elements -->
 
 <!ELEMENT na EMPTY>
 
-<!ENTITY % REAL "#PCDATA|posinf|neginf|nan">
+<!ENTITY % REAL "#PCDATA | posinf | neginf | nan">
 
-<!ELEMENT e (%REAL;)* >
+<!ELEMENT e (%REAL;)*>
 <!ELEMENT posinf EMPTY>
 <!ELEMENT neginf EMPTY>
 <!ELEMENT nan EMPTY>
 
 <!ELEMENT ce (r,i) >
-<!ELEMENT r (%REAL;)* >
-<!ELEMENT i (%REAL;)* >
+<!ELEMENT r (%REAL;)*>
+<!ELEMENT i (%REAL;)*>
 
-<!ELEMENT dimension (dim*)>
-<!ELEMENT dim (e*)>
-<!ATTLIST dim size CDATA #REQUIRED>
-<!ATTLIST dim name CDATA #IMPLIED>
+<!ATTLIST e  info CDATA #IMPLIED>
+<!ATTLIST ce info CDATA #IMPLIED>
+<!ATTLIST na info CDATA #IMPLIED>
 
-<!ELEMENT properties (list)>
+
 
 
  
