@@ -1,18 +1,18 @@
 <!-- StatDataML DTD version="1.0" -->
 
 <!ELEMENT StatDataML (description?, dataset?)>
+<!ATTLIST StatDataML xmlns CDATA #FIXED "http://www.omegahat.org/StatDataML/">
 
 <!-- document description tags -->
 
 <!ELEMENT description (title?, source?, date?, version?,
-                       comment?, creator?, class?, properties?)>
+                       comment?, creator?, properties?)>
 <!ELEMENT title (#PCDATA)>
 <!ELEMENT source (#PCDATA)>
 <!ELEMENT date (#PCDATA)>
 <!ELEMENT version (#PCDATA)>
 <!ELEMENT comment (#PCDATA)>
 <!ELEMENT creator (#PCDATA)>
-<!ELEMENT class (#PCDATA)>
 <!ELEMENT properties (list)>
 
 <!-- basic elements -->
@@ -60,7 +60,7 @@
 <!ELEMENT data (e|ce|na|T|F)* >
 
 <!ELEMENT textdata (#PCDATA) >
-<!ATTLIST textdata sep CDATA " \n" 
+<!ATTLIST textdata sep CDATA " &#x000A;&#x000D;" 
                    na.string CDATA "NA" 
                    null.string CDATA "NULL" 
 		   posinf.string CDATA "+Inf"

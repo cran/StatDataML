@@ -3,7 +3,6 @@ writeDescriptionSDML <- function(title = "RDataset",
                                  version = " ",
                                  date = NULL,
                                  comment = "",
-                                 class = "",
                                  properties = NULL,
                                  file = "",
                                  textdata,
@@ -32,7 +31,6 @@ writeDescriptionSDML <- function(title = "RDataset",
             ":StatDataML_",
             package.description("StatDataML", lib=sdmlib)$Version,
             "</creator>\n", file = file)
-    catSDML("<class>", markup(class), "</class>\n", file = file)
     if (!is.null(properties)) {
       catSDML("<properties>\n", file = file)
 

@@ -9,7 +9,6 @@ readDescriptionSDML <- function(x)
        version    = xmlValue(x[["version"]]),
        comment    = xmlValue(x[["comment"]]),
        creator    = xmlValue(x[["creator"]]),
-       SDMLclass  = xmlValue(x[["class"]]),
        properties = readProperties(x[["properties"]])
        )
 }

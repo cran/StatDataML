@@ -3,8 +3,7 @@ handlersSDML <- function() {
        textdata = function(x, ...) {
          
          sep <- ifelse("sep" %in% names(xmlAttrs(x)),
-                       xmlAttrs(x)["sep"], " \n")
-         sep <- gsub("\\\\n", "\n", sep) ## change \\n back to \n
+                       xmlAttrs(x)["sep"], " \n\r")
          sep <- paste("[", sep, "]+", sep="")
          
          type <- ifelse("type" %in% names(xmlAttrs(x)),

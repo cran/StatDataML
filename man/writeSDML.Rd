@@ -10,7 +10,7 @@ writeSDML(x, file = "", textdata = NULL, dtd = NULL, sep = " \\n",
 na.string = "NA", null.string = "NULL", posinf.string = "+Inf",
 neginf.string = "-Inf", nan.string = "NaN", true = "1", false = "0",
 title = deparse(substitute(x)), source = "R", version = " ",
-date = NULL, comment = " ", class = "", properties = NULL) 
+date = NULL, comment = " ", properties = NULL) 
 }
 \arguments{
   \item{x}{a data object.}
@@ -34,7 +34,6 @@ date = NULL, comment = " ", class = "", properties = NULL)
   \item{version}{the version of the data being saved (string).}
   \item{comment}{a free form commentary for the data being saved (string).}
   \item{date}{a free form date element, date() by default.}
-  \item{class}{data class (provided for future enhancements).}
   \item{properties}{an arbitrary list or array.}
 }
 \details{\code{info} attributes of arrays are used for the 
