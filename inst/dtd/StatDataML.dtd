@@ -46,10 +46,10 @@
 <!ELEMENT numeric (integer | real | complex)?>
 <!ELEMENT integer (min?, max?)>
 <!ELEMENT real (min?, max?)>
-<!ELEMENT complex>
+<!ELEMENT complex EMPTY>
 <!ENTITY % RANGE "#PCDATA | posinf | neginf">
-<!ELEMENT min (%RANGE;)>
-<!ELEMENT max (%RANGE;)>
+<!ELEMENT min (%RANGE;)*>
+<!ELEMENT max (%RANGE;)*>
 
 <!ELEMENT character EMPTY>
 
@@ -57,9 +57,7 @@
 
 <!-- data/textdata tags -->
 
-<!ELEMENT data (e|ce|na)* >
-<!ATTLIST data true  CDATA "1"
-               false CDATA "0">
+<!ELEMENT data (e|ce|na|T|F)* >
 
 <!ELEMENT textdata (#PCDATA) >
 <!ATTLIST textdata sep CDATA " \n" 
@@ -86,9 +84,14 @@
 <!ELEMENT r (%REAL;)*>
 <!ELEMENT i (%REAL;)*>
 
+<!ELEMENT T EMPTY>
+<!ELEMENT F EMPTY>
+
 <!ATTLIST e  info CDATA #IMPLIED>
 <!ATTLIST ce info CDATA #IMPLIED>
 <!ATTLIST na info CDATA #IMPLIED>
+<!ATTLIST T  info CDATA #IMPLIED>
+<!ATTLIST F  info CDATA #IMPLIED>
 
 
 

@@ -11,7 +11,10 @@ etagsSDML <- function(x, ...)
     if (is.na(x[i]) && !is.nan(x[i]))
       catSDML("\<na", inf, "/>", ...)
     else
-      tags(x[i], "e", inf, ...)
+      if (is.logical(x))
+        catSDML("\<", if (x[i]) "T" else "F", inf, "/>", ...)
+      else
+        tags(x[i], "e", inf, ...)
     
     if((i!=length(x)) & ((i %% 5)==0))
       catSDML("\n", ...)

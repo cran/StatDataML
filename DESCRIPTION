@@ -1,6 +1,6 @@
 Package: StatDataML
-Version: 1.0
-Date: 2002/11/27
+Version: 1.0-2
+Date: 2003/01/22
 Title: Read and write StatDataML files
 Author:  Torsten Hothorn <Torsten.Hothorn@rzmail.uni-erlangen.de> 
 	 Friedrich Leisch <leisch@ci.tuwien.ac.at>

@@ -35,8 +35,10 @@ readArraySDML <- function(x)
     
     if (length(dimension$dim) > 1) {
       vals <- array(vals, dim=dimension$dim, dimnames=dimension$names)
-      if (!is.null(x[["data"]]))
-         info <- array(info, dim=dimension$dim, dimnames=dimension$names)
+      if (!is.null(x[["data"]])) {
+        str(info)
+        info <- array(info, dim=dimension$dim, dimnames=dimension$names)
+      }
     } else {
       if (!length(vals))
         vals <- vector()
@@ -48,7 +50,7 @@ readArraySDML <- function(x)
     ## handle types
     if (!is.null(type$type)) {
       
-      if (type$type == "logical") {
+      if (!is.null(x[["textdata"]]) && type$type == "logical") {
         tr <- as.character(default(attribs, "true", "1"))
         fa <- as.character(default(attribs, "false", "0"))
         vals1 <- vals == tr
@@ -84,7 +86,16 @@ readArraySDML <- function(x)
     }
     
     atvals <- attributes(vals)
-    if (!is.null(atvals)) attrib <- c(attrib, atvals)
+    if (!is.null(atvals)) attrib <- c(atvals, attrib)
+
+    ## recombine possibly splitted class attribute
+    ind <- names(attrib) == "class"
+    if (length(ind)) {
+      newclass <- as.character(unlist(attrib[ind]))
+      attrib[ind] <- NULL
+      attrib[["class"]] <- newclass
+    }
+
     if (!is.null(attrib)) attributes(vals) <- attrib
     if (!is.null(info))
       attr(vals, "info") <- info
@@ -106,16 +117,19 @@ getComplexDataSDML <- function(y) {
 
 getDataSDML <- function(y) 
 {
-    w <- sapply(y,
-                function(x) ifelse(x$name=="na", NA,
-                                   if (is.null(x[[1]])) "" else 
-                                   switch(x[[1]]$name,
-                                          posinf = +Inf,
-                                          neginf = -Inf,
-                                          nan    = NaN,
-                                          xmlValue(x[[1]])
-                                          )
-                                   )
+  w <- sapply(y,
+              function(x) switch (x$name,
+                                  na = NA,
+                                  T = TRUE,
+                                  F = FALSE,
+                                  if (is.null(x[[1]])) "" else 
+                                  switch(x[[1]]$name,
+                                         posinf = +Inf,
+                                         neginf = -Inf,
+                                         nan    = NaN,
+                                         xmlValue(x[[1]])
+                                         )
+                                  )
                 )
     attributes(w) <- NULL
 

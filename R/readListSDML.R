@@ -31,7 +31,7 @@ readListSDML <- function(x)
     atL <- attributes(thislist)
     if (!is.null(atL)) attrib <- c(attrib, atL)
     if (!is.null(attrib)) attributes(thislist) <- attrib
-       
+    
     return(thislist)
   }
     
