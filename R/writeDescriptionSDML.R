@@ -18,7 +18,7 @@ writeDescriptionSDML <- function(title = "RDataset",
     ## writes the description tag to file
     markup <- function(x)
       gsub("<", "&lt;", gsub(">", "&gt;", gsub("&", "&amp;", x)))
-    
+
     catSDML("<description>\n", file = file)
     catSDML("<title>", markup(title), "</title>\n", file = file)
     catSDML("<source>", markup(source), "</source>\n", file = file)
@@ -27,10 +27,14 @@ writeDescriptionSDML <- function(title = "RDataset",
     catSDML("<comment>", markup(comment), "</comment>\n", file = file)
     sdmlib <- .path.package("StatDataML")
     sdmlib <- substr(sdmlib, 1, nchar(sdmlib)-10)
+    pkgversion <-
+      if (paste(R.version$major, R.version$minor, sep = ".") < "1.9.0")
+        package.description("StatDataML", lib=sdmlib)$Version
+      else
+        packageDescription("StatDataML", lib=sdmlib)$Version
+    
     catSDML("<creator>R-", R.version$major, ".",  R.version$minor,
-            ":StatDataML_",
-            package.description("StatDataML", lib=sdmlib)$Version,
-            "</creator>\n", file = file)
+            ":StatDataML_", pkgversion, "</creator>\n", file = file)
     if (!is.null(properties)) {
       catSDML("<properties>\n", file = file)
 
