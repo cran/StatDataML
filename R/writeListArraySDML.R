@@ -12,7 +12,7 @@ writeListArraySDML <- function(x,
 {
   if (is.null(x))
     catSDML("\<empty/>\n", file = file)
-  else if (is.recursive(x) && !is.call(x) && !is.environment(x)) {	
+  else if (is.list(x)) {	
     catSDML("\<list>\n", file = file)
     writeDimensionSDML(x, file = file)
     writePropertiesSDML(attributes(x), file = file, textdata = textdata,
@@ -29,8 +29,6 @@ writeListArraySDML <- function(x,
     catSDML("\</list>\n", file = file)
   } else {
     catSDML("\<array>\n", file = file)
-
-    if (is.recursive(x)) x <- deparse(x)
 
     ## dimension tag
     writeDimensionSDML(x, file = file)

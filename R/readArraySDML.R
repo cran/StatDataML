@@ -155,9 +155,9 @@ getTextDataSDML <- function(y, attribs, type)
   if (type == "character")
     y[y == attribs[["null.string"]]] <- ""
   if (type == "numeric") {
-    y <- gsub(attribs[["neginf.string"]], "-Inf", y)
-    y <- gsub(attribs[["posinf.string"]], "Inf", y)
-    y <- gsub(attribs[["nan.string"]], "NaN", y)
+    y[grep(attribs[["neginf.string"]], y, fixed = TRUE)] <- "-Inf"
+    y[grep(attribs[["posinf.string"]], y, fixed = TRUE)] <- "Inf"
+    y[grep(attribs[["nan.string"]], y, fixed = TRUE)] <- "NaN"
   }
   if (type == "logical") {
     y[y == attribs[["true"]]] <- "1"
