@@ -16,7 +16,7 @@ readListSDML <- function(x)
       
     ## set names:
     ### no names for arrays
-    if(names(thislist) == "array") names(thislist) <- NULL
+    if(any(names(thislist) == "array")) names(thislist) <- NULL
         
     ### list with dim attribute?
     if(length(dimension$dim) > 1) {
