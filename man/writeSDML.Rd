@@ -6,7 +6,7 @@
   standard output
 }
 \usage{
-writeSDML(x, file = "", textdata = NULL, dtd = NULL, sep = " \\n",
+writeSDML(x, file = "", textdata = NULL, dtd = NULL, sep = " &#x000A;&#x000D;",
 na.string = "NA", null.string = "NULL", posinf.string = "+Inf",
 neginf.string = "-Inf", nan.string = "NaN", true = "1", false = "0",
 title = deparse(substitute(x)), source = "R", version = " ",
