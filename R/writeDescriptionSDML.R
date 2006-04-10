@@ -16,8 +16,6 @@ writeDescriptionSDML <- function(title = "RDataset",
                                  false)
 {
     ## writes the description tag to file
-    markup <- function(x)
-      gsub("<", "&lt;", gsub(">", "&gt;", gsub("&", "&amp;", x)))
 
     catSDML("<description>\n", file = file)
     catSDML("<title>", markup(title), "</title>\n", file = file)

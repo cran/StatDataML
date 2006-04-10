@@ -1,3 +1,6 @@
+markup <- function(x)
+  gsub("<", "&lt;", gsub(">", "&gt;", gsub("&", "&amp;", x)))
+
 catSDML <- function(...) cat(..., append=TRUE, sep="")
 
 etagsSDML <- function(x, ...)
@@ -9,10 +12,10 @@ etagsSDML <- function(x, ...)
     else ""
     
     if (is.na(x[i]) && !is.nan(x[i]))
-      catSDML("\<na", inf, "/>", ...)
+      catSDML("\<na", markup(inf), "/>", ...)
     else
       if (is.logical(x))
-        catSDML("\<", if (x[i]) "T" else "F", inf, "/>", ...)
+        catSDML("\<", if (x[i]) "T" else "F", markup(inf), "/>", ...)
       else
         tags(x[i], "e", inf, ...)
     
@@ -30,11 +33,11 @@ cetagsSDML <- function(x, ...)
     else ""
     
     if (is.na(x[i]) && !is.nan(x[i]))
-      catSDML("\<na",inf,"/>", ...)
+      catSDML("\<na", markup(inf), "/>", ...)
     else {
-      catSDML("\<ce",inf,">", ...)
-      tags(Re(x[i]),"r", ...)
-      tags(Im(x[i]),"i", ...)
+      catSDML("\<ce", markup(inf), ">", ...)
+      tags(Re(x[i]), "r", ...)
+      tags(Im(x[i]), "i", ...)
       catSDML("\</ce>", ...)
     }
     
@@ -45,13 +48,13 @@ cetagsSDML <- function(x, ...)
 
 tags <- function(x, s, info = "", ...) {
   if (is.nan(x))
-    catSDML("\<", s, info, "><nan/></", s, ">", ...)
+    catSDML("\<", s, markup(info), "><nan/></", s, ">", ...)
   else if (x == Inf)
-    catSDML("\<", s, info, "><posinf/></", s, ">", ...)
+    catSDML("\<", s, markup(info), "><posinf/></", s, ">", ...)
   else if (x == -Inf)
-    catSDML("\<", s, info, "><neginf/></", s, ">", ...)
+    catSDML("\<", s, markup(info), "><neginf/></", s, ">", ...)
   else
-    catSDML("\<", s, info, ">", x, "\</", s, ">", ...)
+    catSDML("\<", s, markup(info), ">", markup(x), "\</", s, ">", ...)
 }
 
 getAttrSDML <- function(x)
