@@ -1,3 +1,5 @@
 export("writeSDML", "readSDML")
 import(XML)
+importFrom(utils,packageDescription)
+
 
