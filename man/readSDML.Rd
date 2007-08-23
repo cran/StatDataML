@@ -5,7 +5,7 @@
   Read a StatDataML file and create a corresponding R object.
 }
 \usage{
-readSDML(file="", text=NULL, validate=FALSE, read.description=FALSE)
+readSDML(file="", text=NULL, validate=FALSE, read.description=FALSE, \dots)
 }
 \arguments{
   \item{file}{the StatDataML file to be read.}
@@ -13,7 +13,8 @@ readSDML(file="", text=NULL, validate=FALSE, read.description=FALSE)
   \item{validate}{logical, should \code{file} be validated using the DTD
     specified in \code{file}?} 
   \item{read.description}{logical, should the \code{description} tag in
-    \code{file} be read?} 
+    \code{file} be read?}
+  \item{\dots}{arguments passed to \code{\link[XML]{xmlTreeParse}}}
 }
 \details{For details on the \code{StatDataML} format see the proposal.
 }
