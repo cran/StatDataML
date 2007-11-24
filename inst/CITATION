@@ -1,0 +1,40 @@
+citHeader("To cite package StatDataML in publications use:")
+
+desc <- packageDescription("StatDataML")
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", desc$Date)
+vers <- paste("R package version", desc$Version)
+
+citEntry(entry="Manual",
+         title = "StatDataML",
+         author = personList(as.person("David Meyer"),
+			     as.person("Torsten Hothorn"),
+			     as.person("Friedrich Leisch")),
+         year = year,
+         note = vers,
+         
+         textVersion =
+         paste("David Meyer, Torsten Hothorn, and Friedrich Leisch (", year,
+               "). StatDataML. ",
+               vers, ".", sep="")
+)
+
+citEntry(entry="Article",
+         title = "StatDataML: An XML format for statistical data",
+         author = personList(as.person("David Meyer"),
+			     as.person("Torsten Hothorn"),
+			     as.person("Friedrich Leisch"),
+	                     as.person("Kurt Hornik")),
+         journal      = "Journal of Computational Statistics",
+         year         = "2004",
+	 month	      = "August",
+	 volume       = "19",
+	 number       = "3",
+	 pages        = "493--509",
+         
+         textVersion = paste(
+         "David Meyer, Torsten Hothorn, Friedrich Leisch, and Kurt Hornik (2004).",	 
+	 "StatDataML: An XML format for statistical data.",
+       	 "Journal of Computational Statistics, 19(3), 493-509.")
+
+)
+

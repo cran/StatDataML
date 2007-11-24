@@ -1,13 +1,13 @@
 Package: StatDataML
-Version: 1.0-14
-Date: 2007/08/23
+Version: 1.0-15
+Date: 2007-11-24
 Title: Read and write StatDataML files
-Author: David Meyer <david.meyer@ci.tuwien.ac.at>
-	Torsten Hothorn <Torsten.Hothorn@rzmail.uni-erlangen.de> 
-	Friedrich Leisch <leisch@ci.tuwien.ac.at>
+Author: David Meyer <David.Meyer@R-Project.org>
+	Torsten Hothorn <torsten@hothorn.de> 
+	Friedrich Leisch <Friedrich.Leisch@R-Project.org>
 Title: implementation of the StatDataML proposal
 Description: read and write StatDataML files
 Maintainer: David Meyer <David.Meyer@R-project.org>
 Depends: R (>= 2.0.0), XML, utils
 License: GPL-2
-Packaged: Thu Aug 23 15:19:11 2007; meyer
+Packaged: Sat Nov 24 18:28:53 2007; meyer

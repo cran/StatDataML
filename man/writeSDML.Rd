@@ -40,8 +40,7 @@ date = NULL, comment = " ", properties = NULL)
   \code{info} attributes of the \code{e} / \code{ce} / \code{na} tags
   in StatDataML. For further details on the \code{StatDataML} format see the proposal.
 }
-\author{Torsten Hothorn <Torsten.Hothorn@rzmail.uni-erlangen.de> and Friedrich
-  Leisch<leisch@ci.tuwien.ac.at>} 
+\author{David.Meyer@R-Project.org} 
 \seealso{\code{\link{readSDML}}}
 
 \examples{
