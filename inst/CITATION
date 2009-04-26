@@ -2,9 +2,8 @@ citHeader("To cite package StatDataML in publications use:")
 
 if(!exists("meta") || is.null(meta)) meta <- packageDescription("StatDataML")
 
-desc <- packageDescription("StatDataML")
-year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", desc$Date)
-vers <- paste("R package version", desc$Version)
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
+vers <- paste("R package version", meta$Version)
 
 citEntry(entry="Manual",
          title = "StatDataML",
