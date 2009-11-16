@@ -26,27 +26,25 @@ writeDescriptionSDML <- function(title = "RDataset",
     sdmlib <- system.file(package = "StatDataML")
     sdmlib <- substr(sdmlib, 1, nchar(sdmlib)-10)
     pkgversion <-
-      if (paste(R.version$major, R.version$minor, sep = ".") < "1.9.0")
-        package.description("StatDataML", lib=sdmlib)$Version
-      else
-        packageDescription("StatDataML", lib=sdmlib)$Version
-    
+        if (paste(R.version$major, R.version$minor, sep = ".") < "1.9.0")
+            package.description("StatDataML", lib=sdmlib)$Version
+        else
+            packageDescription("StatDataML", lib=sdmlib)$Version
+
     catSDML("<creator>R-", R.version$major, ".",  R.version$minor,
             ":StatDataML_", pkgversion, "</creator>\n", file = file)
     if (!is.null(properties)) {
-      catSDML("<properties>\n", file = file)
+        catSDML("<properties>\n", file = file)
 
-      if (!is.list(properties))
-        properties <- list(properties)
-      writeListArraySDML(properties, file = file, textdata = textdata,
-                         sep = sep, na.string = na.string,
-                         null.string = null.string, posinf.string = posinf.string,
-                         neginf.string = neginf.string, nan.string = nan.string,
-                         true = true, false = false)
-      
-      catSDML("</properties>\n", file = file)
+        if (!is.list(properties))
+            properties <- list(properties)
+        writeListArraySDML(properties, file = file, textdata = textdata,
+                           sep = sep, na.string = na.string,
+                           null.string = null.string, posinf.string = posinf.string,
+                           neginf.string = neginf.string, nan.string = nan.string,
+                           true = true, false = false)
+
+        catSDML("</properties>\n", file = file)
     }
     catSDML("</description>\n", file = file)
 }
-
-

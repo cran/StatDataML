@@ -17,31 +17,30 @@ writeSDML <- function(x,
                       comment = " ",
                       properties = NULL)
 {
-  if (is.null(date)) date <- date()
-  if (is.null(dtd))
-    dtd <- system.file("dtd/StatDataML.dtd", package = "StatDataML")[1]
-  
-  cat("<?xml version=\"1.0\"?>\n", file = file, sep = "")
-  catSDML("<!DOCTYPE StatDataML PUBLIC \"StatDataML.dtd\" \"", dtd,
-      "\" >\n", file = file)
-  catSDML("<StatDataML xmlns=\"http://www.omegahat.org/StatDataML/\">\n", file = file)
-  
-  writeDescriptionSDML(title = title, source = source,
-                       version = version, date = date,
-                       comment = comment, file = file,
-                       properties = properties,
-                       textdata = textdata, sep = sep,
-                       na.string = na.string, null.string = null.string,
-                       posinf.string = posinf.string, neginf.string = neginf.string,
-                       true = true, false = false, nan.string = nan.string)
-  
-  writeDatasetSDML(x, file = file, textdata = textdata, sep = sep,
-                   na.string = na.string, null.string = null.string,
-                   posinf.string = posinf.string, neginf.string = neginf.string,
-                   true = true, false = false, nan.string = nan.string)
-  
-  catSDML("</StatDataML>\n", file = file)
+    if (is.null(date)) date <- date()
+    if (is.null(dtd))
+        dtd <- system.file("dtd/StatDataML.dtd", package = "StatDataML")[1]
+
+    cat("<?xml version=\"1.0\"?>\n", file = file, sep = "")
+    catSDML("<!DOCTYPE StatDataML PUBLIC \"StatDataML.dtd\" \"", dtd,
+            "\" >\n", file = file)
+    catSDML("<StatDataML xmlns=\"http://www.omegahat.org/StatDataML/\">\n",
+            file = file)
+
+    writeDescriptionSDML(title = title, source = source,
+                         version = version, date = date,
+                         comment = comment, file = file,
+                         properties = properties,
+                         textdata = textdata, sep = sep,
+                         na.string = na.string, null.string = null.string,
+                         posinf.string = posinf.string,
+                         neginf.string = neginf.string,
+                         true = true, false = false, nan.string = nan.string)
+
+    writeDatasetSDML(x, file = file, textdata = textdata, sep = sep,
+                     na.string = na.string, null.string = null.string,
+                     posinf.string = posinf.string, neginf.string = neginf.string,
+                     true = true, false = false, nan.string = nan.string)
+
+    catSDML("</StatDataML>\n", file = file)
 }
-
-
-

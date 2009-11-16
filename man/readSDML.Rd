@@ -26,39 +26,31 @@ readSDML(file="", text=NULL, validate=FALSE, read.description=FALSE, \dots)
 \examples{
 library(XML)
 
+TEST <-
+    function(x) identical(readSDML(text = capture.output(writeSDML(x))), x)
+
 # write/read vector with names
 a <- 1:15
 names(a) <- paste("n", 1:15, sep="")
-writeSDML(a, "testvec.xml")
-b <- readSDML("testvec.xml")
-cat(" a is equal b :", all.equal(a,b), "\n")
-
+stopifnot(TEST(a))
 
 # write/read a matrix
 A <- matrix(1:16, ncol=4)
 rownames(A) <- paste("row", 1:4, sep="")
 colnames(A) <- paste("col", 1:4, sep="")
-writeSDML(A, "testmat.sdml")
-B <- readSDML("testmat.sdml")
-cat(" A is equal B :", all.equal(A,B), "\n")
+stopifnot(TEST(A))
 
 # write/read a data.frame
 data(iris)
-writeSDML(iris, "iris.sdml")
-irisSDML <- readSDML("iris.sdml")
-cat(" iris is equal irisSDML: ", all.equal(iris,irisSDML), "\n")
+stopifnot(TEST(iris))
 
 # write/read a ts object
 data(airmiles)
-writeSDML(airmiles, "air.sdml")
-airSDML <- readSDML("air.sdml")
-cat(" airmiles is equal airSDML: ", all.equal(airmiles,airSDML), "\n")
+stopifnot(TEST(airmiles))
 
 # write/read the islands data
 data(islands)
-writeSDML(islands, "islands.sdml")
-islandsSDML <- readSDML("islands.sdml")
-cat(" islands is equal islandsSDML: ", all.equal(islands,islandsSDML), "\n")
+stopifnot(TEST(islands))
 
 }
 \keyword{file}
