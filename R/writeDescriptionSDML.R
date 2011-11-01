@@ -25,11 +25,7 @@ writeDescriptionSDML <- function(title = "RDataset",
     catSDML("<comment>", markup(comment), "</comment>\n", file = file)
     sdmlib <- system.file(package = "StatDataML")
     sdmlib <- substr(sdmlib, 1, nchar(sdmlib)-10)
-    pkgversion <-
-        if (paste(R.version$major, R.version$minor, sep = ".") < "1.9.0")
-            package.description("StatDataML", lib=sdmlib)$Version
-        else
-            packageDescription("StatDataML", lib=sdmlib)$Version
+    pkgversion <- packageDescription("StatDataML", lib=sdmlib)$Version
 
     catSDML("<creator>R-", R.version$major, ".",  R.version$minor,
             ":StatDataML_", pkgversion, "</creator>\n", file = file)
