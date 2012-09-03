@@ -5,7 +5,7 @@ readSDML <- function(file = "", text = NULL, validate = FALSE,
     tree <- xmlTreeParse(file = if(txt) text else file,
                          asText = txt,
                          validate=validate,
-                         handler=handlersSDML(), asTree=TRUE,
+                         handlers=handlersSDML(), asTree=TRUE,
                          ignoreBlanks = FALSE, trim = FALSE, ...)
 
     ## is this file a StatDataML file ?
