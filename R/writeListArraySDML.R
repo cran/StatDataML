@@ -12,20 +12,20 @@ writeListArraySDML <- function(x,
 {
   if (is.null(x))
     catSDML("<empty/>\n", file = file)
-  else if (is.list(x)) {	
+  else if (is.list(x)) {
     catSDML("<list>\n", file = file)
     writeDimensionSDML(x, file = file)
     writePropertiesSDML(attributes(x), file = file, textdata = textdata,
            sep = sep, na.string = na.string, null.string = null.string,
            posinf.string = posinf.string, neginf.string = neginf.string,
            nan.string = nan.string, true = true, false = false)
-                            
-    catSDML("<listdata>\n", file = file)		
+
+    catSDML("<listdata>\n", file = file)
     lapply(x, writeListArraySDML, file = file, textdata = textdata,
            sep = sep, na.string = na.string, null.string = null.string,
            posinf.string = posinf.string, neginf.string = neginf.string,
            nan.string = nan.string, true = true, false = false)
-    catSDML("</listdata>\n", file = file)	
+    catSDML("</listdata>\n", file = file)
     catSDML("</list>\n", file = file)
   } else {
     catSDML("<array>\n", file = file)
@@ -45,13 +45,13 @@ writeListArraySDML <- function(x,
       "logical"
     else
       "numeric"
-    
+
     ## check the mode
     mode <- NULL
     if (type == "numeric")
       mode <- if (is.integer(x))
         "integer"
-      else if (is.real(x))
+      else if (is.double(x))
         "real"
       else
         "complex"
@@ -60,7 +60,7 @@ writeListArraySDML <- function(x,
         "ordered"
       else
         "unordered"
-    
+
     ## write type tag
     writeTypeSDML(x, type, mode, file = file)
 
@@ -84,7 +84,7 @@ writeListArraySDML <- function(x,
 
     if (is.null(textdata))
       textdata <- type != "character" && type != "datetime"
-    
+
     x <- switch (type,
                  logical = if (textdata) ifelse(x, true, false) else x,
                  categorical = as.numeric(x),
@@ -119,13 +119,13 @@ writeListArraySDML <- function(x,
               )
       if (length(x)) {
         catSDML("\n", file = file)
-      
+
         ## replacements
         x <- as.character(x)
 
         x[is.na(x)] <- na.string
         x[x == ""] <- null.string
-      
+
         if (type == "numeric") {
           x <- gsub("NaN", nan.string, x)
           x <- gsub("^Inf", posinf.string, x)
@@ -140,7 +140,7 @@ writeListArraySDML <- function(x,
         ## write data
         cat(markup(x), sep=c(rep(substr(sep, 1, 1), 9), "\n"), file = file, append = TRUE)
       }
-      
+
       catSDML("</textdata>\n", file = file)
     } else {
       ## data tag
@@ -148,7 +148,7 @@ writeListArraySDML <- function(x,
 
       if (length(x)) {
         catSDML("\n", file = file)
-      
+
         if(!is.null(a <- attr(xtmp, "info")))
           attr(x, "info") <- a
 
@@ -157,7 +157,7 @@ writeListArraySDML <- function(x,
           cetagsSDML(x, file = file)
         else
           etagsSDML(x, file = file)
-        
+
         catSDML("\n", file = file)
       }
       catSDML("</data>\n", file = file)
@@ -166,36 +166,36 @@ writeListArraySDML <- function(x,
   }
 }
 
-writeDimensionSDML <- function(x, file = "") 
+writeDimensionSDML <- function(x, file = "")
 {
   ## make dataframes behave themselves
   x <- unclass(x)
-  
+
   catSDML("<dimension>", file = file)
   if (length(x)) catSDML("\n", file = file)
-  
+
   if (!is.null(dim(x))) {
-    for (i in 1:length(dim(x))) {	
+    for (i in 1:length(dim(x))) {
       catSDML("<dim size=\"", dim(x)[i], "\"",
               if (!is.null(names(dimnames(x))[i]))
               paste(" name=\"", markup(names(dimnames(x))[i]), "\"", sep = ""),
               ">", file = file)
-      
+
       if (!is.null(dimnames(x)[[i]]))
         etagsSDML(dimnames(x)[[i]], file = file)
-      
+
       catSDML("</dim>\n", file = file)
     }
   } else if (length(x)) {
     catSDML("<dim size=\"", length(x), "\">", file = file)
-    
+
     if (!is.null(names(x)))
       etagsSDML(names(x), file = file)
-    
+
     catSDML("</dim>\n", file = file)
   }
-  
-  catSDML("</dimension>\n", file = file)	
+
+  catSDML("</dimension>\n", file = file)
 }
 
 writePropertiesSDML <- function(attrib, file, textdata, ...)
@@ -205,13 +205,13 @@ writePropertiesSDML <- function(attrib, file, textdata, ...)
   attrib[["dimnames"]] <- NULL
   attrib[["length"]] <- NULL
   if (!is.null(textdata) && !textdata) attrib[["info"]] <- NULL
-  
+
   if (!is.null(attrib) && length(attrib) > 0) {
     catSDML("<properties>\n", file = file)
-    
+
     writeListArraySDML(attrib, file = file, textdata = textdata, ...)
-    
-    catSDML("</properties>\n", file = file)	
+
+    catSDML("</properties>\n", file = file)
   }
 }
 
@@ -231,17 +231,17 @@ writeTypeSDML <- function(x, type, mode, file)
       tags(max(x, na.rm = TRUE), "max", file = file)
       catSDML("\n</",mode,">", file = file)
     }
-    
-    catSDML("</numeric>", file = file)	
+
+    catSDML("</numeric>", file = file)
   } else {## categorical
     catSDML("\n<categorical mode=\"", mode, "\">\n", file = file)
     for (i in 1:length(levels(x)))
       catSDML("<label code=\"", i, "\">", markup(levels(x)[i]),
               "</label>\n", file = file)
-    catSDML("</categorical>\n", file = file)	
+    catSDML("</categorical>\n", file = file)
   }
-  
-  catSDML("</type>\n", file = file)	
+
+  catSDML("</type>\n", file = file)
 }
 
 
