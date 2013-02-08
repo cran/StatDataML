@@ -65,7 +65,7 @@ readArraySDML <- function(x)
             }
 
             if (type$type == "numeric") {
-                if (type$mode %in% c("integer", "real", "complex"))
+                if (type$mode %in% c("integer", "complex"))
                     mode(vals) <- type$mode
                 else ## default mode if none
                     mode(vals) <- "double"
@@ -131,7 +131,11 @@ getDataSDML <- function(y)
                                     na = NA,
                                     T = TRUE,
                                     F = FALSE,
-                                    min = , max = xmlValue(x[[1]]),
+                                    min = , max = switch(x[[1]]$name,
+                                           posinf = +Inf,
+                                           neginf = -Inf,
+                                           xmlValue(x[[1]])
+                                           ),
                                     e = if (!length(x)) "" else
                                     switch(x[[1]]$name,
                                            posinf = +Inf,
