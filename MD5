@@ -1,4 +1,4 @@
-97ddc1e6e8cb35eab8bd6a890e8d7021 *DESCRIPTION
+871ff18fe622b4694dcd0122602bc2bf *DESCRIPTION
 72aacc01232e4e76be6ae4b1961a49dd *NAMESPACE
 796036d9571131556e2eb35d77b7e426 *R/handlers.R
 143422d4c63b101695abb844beed9f25 *R/readArraySDML.R
@@ -15,7 +15,7 @@ a858d31655bd5c3c50f08027bab7ad40 *R/writeDatasetSDML.R
 6cb7df35ea4b6cac8c81e4d6b0daf22b *R/writeListArraySDML.R
 37dbe275e358a2b6b18a2e0f48772c01 *R/writeSDML.R
 858b50c6ddecb6a6555d56874df23ddf *inst/CITATION
-fce002f9f9e77556687b44103b9dbc51 *inst/doc/StatDataML.pdf
+c5369afe9144741e1977cc3f750731ec *inst/doc/StatDataML.pdf
 9fb34cd638227f185a6b975b53799e43 *inst/dtd/StatDataML.dtd
 385a1ededd855d91cff7bbb48bfcfbb5 *man/readSDML.Rd
 d99eddfd1c15a4a8790116c054827cb5 *man/writeSDML.Rd
