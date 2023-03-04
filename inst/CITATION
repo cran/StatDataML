@@ -1,41 +1,27 @@
-citHeader("To cite package StatDataML in publications use:")
+citation(auto = meta)
 
-if(!exists("meta") || is.null(meta)) meta <- packageDescription("StatDataML")
-
-year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
-vers <- paste("R package version", meta$Version)
-
-citEntry(entry="Manual",
-         title = "StatDataML",
-         author = personList(as.person("David Meyer"),
-			     as.person("Torsten Hothorn"),
-			     as.person("Friedrich Leisch")),
-         year = year,
-         note = vers,
-         
-         textVersion =
-         paste("David Meyer, Torsten Hothorn, and Friedrich Leisch (", year,
-               "). StatDataML. ",
-               vers, ".", sep="")
-)
-
-citEntry(entry="Article",
+bibentry("Article",
          title = "StatDataML: An XML format for statistical data",
-         author = personList(as.person("David Meyer"),
-			     as.person("Torsten Hothorn"),
-			     as.person("Friedrich Leisch"),
-	                     as.person("Kurt Hornik")),
+         author =
+             c(person("David", "Meyer",
+                    email = "David.Meyer@R-project.org",
+		    comment = c(ORCID = "0000-0002-5196-3048")),
+               person("Torsten", "Hothorn",
+                    email = "Torsten.Hothorn@R-project.org",
+		    comment = c(ORCID = "0000-0001-8301-0471")),
+               person("Friedrich", "Leisch",
+                    email = "Friedrich.Leisch@R-project.org",
+		    comment = c(ORCID = "0000-0001-7278-1983")),
+               person("Kurt", "Hornik",
+                      email = "Kurt.Hornik@R-project.org",
+                      comment = c(ORCID = "0000-0003-4198-9911"))),
          journal      = "Journal of Computational Statistics",
          year         = "2004",
 	 month	      = "August",
 	 volume       = "19",
 	 number       = "3",
 	 pages        = "493--509",
-         
-         textVersion = paste(
-         "David Meyer, Torsten Hothorn, Friedrich Leisch, and Kurt Hornik (2004).",	 
-	 "StatDataML: An XML format for statistical data.",
-       	 "Journal of Computational Statistics, 19(3), 493-509.")
+
 
 )
 

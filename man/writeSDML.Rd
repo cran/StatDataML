@@ -47,10 +47,20 @@ date = NULL, comment = " ", properties = NULL)
 A <- matrix(1:16, ncol=4)
 rownames(A) <- paste("row", 1:4, sep="")
 colnames(A) <- paste("col", 1:4, sep="")
-writeSDML(A, "testmat.sdml")
+
+# export to temporary file
+tmp_file1 = tempfile()
+writeSDML(A, tmp_file1)
 
 I <- letters[1:16]
 attr(A, "info") <- I
-writeSDML(A, "testmat2.sdml", textdata = FALSE)
+
+# export to temporary file
+tmp_file2 = tempfile()
+writeSDML(A, tmp_file2, textdata = FALSE)
+
+# cleanup
+unlink(tmp_file1)
+unlink(tmp_file2)
 }
 \keyword{file}
